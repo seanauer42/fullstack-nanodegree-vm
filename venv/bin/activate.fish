@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/lex/dev/full stack foundations/fullstack/venv"
+set -gx VIRTUAL_ENV "/home/lex/Documents/dev/full stack foundations/fullstack/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
