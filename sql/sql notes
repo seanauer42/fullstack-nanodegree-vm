@@ -1,0 +1,17 @@
+CRUD commands:
+    insert into
+    select
+    update
+    delete
+
+sqlalchemy helps turn our sql interfacing into objects
+
+Base.metadata.bind = create_engine(sql:///restaurantmenu.db)
+DBSession = sessionmaker(bind = engine)
+session = DBSession()
+{
+    NewEntry = ClassName(value='property')
+    session.add(NewEntry)
+    session.commit()
+}
+MyFirstRestaurant = Restaurant(name="Papa John's", id=1)
