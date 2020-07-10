@@ -26,3 +26,31 @@ to create a session:
     session = DBSession()
 
 session.query(Restaurant).all()
+
+reading:
+    firstResult = session.query(Restaurant).first()
+    firstResult.name
+        //displays name
+
+    items = session.query(MenuItem).all()
+    for item in items:
+        print(item.name)
+        //prints all names of menu items
+
+updating:
+    veggie_burger = session.query(MenuItem).filter_by(name = 'Veggie Burger')
+    for burger in veggie_burger:
+        print(burger.id)
+        print(burger.price)
+        print(burger.restaurant.name)
+
+    urban_veggie_burger = session.query(MenuItem).filter_by(id=8).one()
+    urban_veggie_burger.price = '$2.99'
+    session.add(urban_veggie_burger)
+    session.commit()
+
+    for burger in veggie_burger:
+        if burger.price != '$2.99':
+            burger.price = '$2.99'
+            session.add(burger)
+            session.commit()
