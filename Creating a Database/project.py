@@ -19,17 +19,6 @@ def restaurant_menu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
 
-    # output = f'<h1>{restaurant.name}</h1>'
-    # for i in items:
-    #     output += i.name
-    #     output += '<br>'
-    #     output += i.price
-    #     output += '<br>'
-    #     output += i.description
-    #     output += '<p>'
-    #
-    # # this is the link to add a new menu item
-    # output += f'<p><a href="/restaurants/{restaurant.id}/new_item">New Menu Item</a>'
     return render_template('menu.html', restaurant=restaurant, items=items)
 
 
@@ -47,7 +36,15 @@ def delete_menu_item(restaurant_id, menu_id):
 def edit_menu_item(restaurant_id, menu_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     menu_item = session.query(MenuItem).filter_by(id=menu_id).one()
-    return render_template('edit_menu_item.html', restaurant=restaurant, menu_item=menu_item)
+
+    if request.method == 'POST':
+        menu_item.name = request.form['name']
+        session.add(menu_item)
+        session.commit()
+
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant.id))
+    else:
+        return render_template('edit_menu_item.html', restaurant_id=restaurant.id, menu_item=menu_item)
 
 
 # creating a page so that you can add a new item to a restaurant
