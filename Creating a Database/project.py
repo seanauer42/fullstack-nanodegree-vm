@@ -1,9 +1,21 @@
-from flask import Flask, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
 app = Flask(__name__)
+
+
+@property
+def serialize(self):
+    return {
+        'name': self.name,
+        'description': self.description,
+        'id': self.id,
+        'price': self.price,
+        'course': self.course,
+    }
+
 
 # accessing the database
 engine = create_engine('sqlite:///restaurantmenu.db')
@@ -12,6 +24,23 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 engine = create_engine('sqlite:///restaurantmenu.db')
+
+
+# making an API endpoint
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def restaurant_menu_json(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
+
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+def restaurant_item_json(restaurant_id, menu_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    menu_item = session.query(MenuItem).filter_by(id=menu_id).one()
+
+    return jsonify(Item=menu_item.serialize)
 
 
 @app.route('/restaurants/<int:restaurant_id>/')
